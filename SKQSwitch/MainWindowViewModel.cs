@@ -136,6 +136,7 @@ namespace SKQSwitch
             }
         }
         private string lastMsg = string.Empty;
+        private int INFO_MAX_LENGTH = 1000;
         public void AddInfo(string msg)
         {
             if (msg == lastMsg)
@@ -146,9 +147,9 @@ namespace SKQSwitch
             Utils.LogUtil.AddInfo(txt);
             sb.Append(txt);
             sb.Append(this.Info);
-            if(sb.Length > 1000)
+            if(sb.Length > INFO_MAX_LENGTH)
             {
-                sb.Remove(1000, sb.Length - 1000);
+                sb.Remove(INFO_MAX_LENGTH, sb.Length - INFO_MAX_LENGTH);
             }
             this.Info = sb.ToString();
         }
