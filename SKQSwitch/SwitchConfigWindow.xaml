@@ -7,7 +7,7 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        Title="切换配置" Height="240" Width="400">
+        Title="激光研究所-切换配置" Height="240" Width="400">
     <Window.DataContext>
         <local:SwitchConfigWindowViewModel x:Name="viewModel"/>
     </Window.DataContext>

@@ -35,9 +35,10 @@ namespace SKQSwitch
             this.Memo = isPause ? "启动" : "暂停";
         }
         [RelayCommand]
-        private void SwitchConfigWin()
+        private void SwitchConfigWin(Window win)
         {
             SwitchConfigWindow switchConfigWindow = new();
+            switchConfigWindow.Owner = win;
             switchConfigWindow.ShowDialog();
         }
         public MainWindowViewModel()
