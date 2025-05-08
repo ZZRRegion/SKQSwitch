@@ -34,7 +34,6 @@ namespace SKQSwitch
         }
         public MainWindowViewModel()
         {
-            this.AddInfo("软件启动");
             DispatcherTimer dispatcherTimer = new()
             {
                 Interval = TimeSpan.FromSeconds(3),
@@ -65,6 +64,7 @@ namespace SKQSwitch
                 }
                 else
                 {
+                    this.AddInfo($"找到进程：{processName}，数量：{processes.Length}");
                     foreach (Process process in processes)
                     {
                         this.AddInfo($"名称：{processName},标题：{process.MainWindowTitle},句柄：{process.MainWindowHandle:X}，PID：{process.Id}");
@@ -84,8 +84,11 @@ namespace SKQSwitch
                             this.AddInfo("非窗口句柄，不处理");
                             continue;
                         }
-                        User32.AllowSetForegroundWindow(uint.MaxValue);
-                        User32.SetForegroundWindow(process.MainWindowHandle);
+                        bool flag = false;
+                        flag = User32.AllowSetForegroundWindow(uint.MaxValue);
+                        this.AddInfo($"AllowSetForegroundWindow:{flag}");
+                        flag = User32.SetForegroundWindow(process.MainWindowHandle);
+                        this.AddInfo($"SetForegroundWindow:{flag}");
                         User32.SwitchToThisWindow(process.MainWindowHandle, true);
                         User32.SetActiveWindow(process.MainWindowHandle);
                         User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);

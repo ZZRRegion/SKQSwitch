@@ -27,5 +27,10 @@ namespace SKQSwitch.Utils
         {
             File.AppendAllText(FileName, info);
         }
+        public static void AddInfoInsertDateTime(string info)
+        {
+            string msg = $"{DateTime.Now}{info}{Environment.NewLine}";
+            File.AppendAllText(FileName, msg);
+        }
     }
 }

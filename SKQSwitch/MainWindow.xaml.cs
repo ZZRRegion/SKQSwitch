@@ -26,7 +26,12 @@ namespace SKQSwitch
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           
+            Utils.LogUtil.AddInfoInsertDateTime("软件启动");
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Utils.LogUtil.AddInfoInsertDateTime("软件退出");
         }
     }
 }
