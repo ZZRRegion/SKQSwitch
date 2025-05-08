@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Vanara.PInvoke;
 
@@ -34,6 +35,12 @@ namespace SKQSwitch
         {
             this.isPause = !this.isPause;
             this.Memo = isPause ? "启动" : "暂停";
+        }
+        [RelayCommand]
+        private void SwitchConfig()
+        {
+            SwitchConfigWindow switchConfigWindow = new();
+            switchConfigWindow.ShowDialog();
         }
         public MainWindowViewModel()
         {

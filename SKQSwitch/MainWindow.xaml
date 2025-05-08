@@ -17,8 +17,16 @@
             <DropShadowEffect BlurRadius="10" ShadowDepth="0" Direction="90" Color="Black" Opacity="0.5"/>
         </Border.Effect>
         <StackPanel Margin="0">
-            <Button Click="Button_Click" HorizontalAlignment="Right" Height="20" Width="20" BorderThickness="0" 
-                    Background="Transparent" Foreground="IndianRed" Padding="0" Margin="0" Content="X"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Command="{Binding SwitchConfigCommand}" HorizontalAlignment="Left" Height="20" Padding="0" Margin="0" BorderThickness="0" 
+                        Background="Transparent" Foreground="Gray" Width="20" Content="..."/>
+                <Button Grid.Column="1" Click="Button_Click" HorizontalAlignment="Right" Height="20" Width="20" BorderThickness="0" 
+                Background="Transparent" Foreground="IndianRed" Padding="0" Margin="0" Content="X"/>
+            </Grid>
             <Button Background="#87CEEB" Margin="6 0" Command="{Binding PauseCommand}" Content="{Binding Memo}"/>
         </StackPanel>
     </Border>

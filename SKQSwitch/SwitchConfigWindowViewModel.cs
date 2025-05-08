@@ -1,0 +1,68 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SKQSwitch.Utils;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace SKQSwitch
+{
+    internal partial class SwitchConfigWindowViewModel : ObservableObject
+    {
+        [ObservableProperty]
+        private ObservableCollection<SwitchConfig> switchs = new();
+        [ObservableProperty]
+        private string? exeName;
+        [ObservableProperty]
+        private int time;
+        [RelayCommand]
+        private void Add()
+        {
+            if(string.IsNullOrWhiteSpace(ExeName))
+            {
+                MessageBox.Show("请输入要添加的软件名称！");
+                return;
+            }
+            SwitchConfig.Add(ExeName, Time);
+            this.Update();
+        }
+        [RelayCommand]
+        private void Remove()
+        {
+            if(string.IsNullOrWhiteSpace(ExeName))
+            {
+                MessageBox.Show("请输入要删除的软件名称！");
+                return;
+            }
+            SwitchConfig.Remove(ExeName);
+            this.Update();
+        }
+        [RelayCommand]
+        private void OnItemDoubleClick()
+        {
+
+        }
+        public void UpdateConfig(SwitchConfig switchConfig)
+        {
+            this.ExeName = switchConfig.ExeName;
+            this.Time = switchConfig.Time;
+        }
+        public SwitchConfigWindowViewModel()
+        {
+            this.Update();
+        }
+        private void Update()
+        {
+            this.Switchs.Clear();
+            foreach(SwitchConfig config in SwitchConfig.SwitchConfigs)
+            {
+                this.Switchs.Add(config);
+            }
+        }
+    }
+}

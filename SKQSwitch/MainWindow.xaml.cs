@@ -50,7 +50,10 @@ namespace SKQSwitch
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (MessageBox.Show("确定退出？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
 }
