@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SKQSwitch.Utils
@@ -91,8 +92,13 @@ namespace SKQSwitch.Utils
         /// <param name="list"></param>
         public static void Save()
         {
-            string content = System.Text.Json.JsonSerializer.Serialize(SwitchConfigs);
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true
+            };
+            string content = JsonSerializer.Serialize(SwitchConfigs, options);
             File.WriteAllText(SKQPath.SwitchConfigFileName, content);
+            LogUtil.AddInfoInsertDateTime($"保存内容：{content}");
         }
     }
 }

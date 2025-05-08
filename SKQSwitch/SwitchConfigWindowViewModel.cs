@@ -66,6 +66,7 @@ namespace SKQSwitch
         public void UpdateConfig(SwitchConfig switchConfig)
         {
             this.ExeName = switchConfig.ExeName;
+            this.Title = switchConfig.Title;
             this.Time = switchConfig.Time;
         }
         public SwitchConfigWindowViewModel()
