@@ -24,7 +24,7 @@ namespace SKQSwitch
         /// <summary>
         /// 软件进程名称
         /// </summary>
-        private string[] processNames = { "UltraGalvo" , "wps" };
+        private string[] processNames = { "UltraGalvo" , "VisionBlues2", "wps" };
         [ObservableProperty]
         private string info = string.Empty;
         [RelayCommand]
@@ -90,12 +90,12 @@ namespace SKQSwitch
                         flag = User32.SetForegroundWindow(process.MainWindowHandle);
                         this.AddInfo($"SetForegroundWindow:{flag}");
                         User32.SwitchToThisWindow(process.MainWindowHandle, true);
-                        User32.SetActiveWindow(process.MainWindowHandle);
-                        User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
+                        //User32.SetActiveWindow(process.MainWindowHandle);
+                        //User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
                         //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
                         //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_NOTOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
-
                     }
+                    //User32.SwitchToThisWindow(Process.GetCurrentProcess().MainWindowHandle, true);
                 }
             }
             catch(Exception ex)
@@ -103,7 +103,7 @@ namespace SKQSwitch
                 this.AddInfo(ex.ToString());
             }
         }
-        private void AddInfo(string msg)
+        public void AddInfo(string msg)
         {
             StringBuilder sb = new();
             string txt = $"{DateTime.Now}:{msg}{Environment.NewLine}";
