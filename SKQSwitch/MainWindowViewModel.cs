@@ -135,8 +135,12 @@ namespace SKQSwitch
                 this.AddInfo(ex.ToString());
             }
         }
+        private string lastMsg = string.Empty;
         public void AddInfo(string msg)
         {
+            if (msg == lastMsg)
+                return;
+            lastMsg = msg;
             StringBuilder sb = new();
             string txt = $"{DateTime.Now}:{msg}{Environment.NewLine}";
             Utils.LogUtil.AddInfo(txt);
