@@ -17,7 +17,9 @@ namespace SKQSwitch
         [ObservableProperty]
         private ObservableCollection<SwitchConfig> switchs = new();
         [ObservableProperty]
-        private string? exeName;
+        private string exeName = string.Empty;
+        [ObservableProperty]
+        private string title = string.Empty;
         [ObservableProperty]
         private int time = 3;
         [RelayCommand]
@@ -43,7 +45,7 @@ namespace SKQSwitch
             }
             if (MessageBox.Show("确认添加？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                SwitchConfig.Add(ExeName, Time);
+                SwitchConfig.Add(ExeName, Title, Time);
                 this.Update();
             }
         }

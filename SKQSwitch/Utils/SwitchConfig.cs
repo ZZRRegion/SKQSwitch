@@ -16,27 +16,28 @@ namespace SKQSwitch.Utils
         /// <summary>
         /// 进程名称
         /// </summary>
-        public string? ExeName { get; set; }
+        public string ExeName { get; set; }
+        /// <summary>
+        /// 主窗口名称
+        /// </summary>
+        public string Title { get; set; }
         /// <summary>
         /// 展示时间
         /// </summary>
         public int Time { get; set; }
-        public SwitchConfig()
-        {
-            
-        }
-        public SwitchConfig(string? exeName, int time)
+        public SwitchConfig(string exeName, string title, int time)
         {
             this.ExeName = exeName;
+            this.Title = title;
             this.Time = time;
         }
         static SwitchConfig()
         {
             SwitchConfigs = Load();
         }
-        public static void Add(string? exeName, int time)
+        public static void Add(string exeName, string title, int time)
         {
-            SwitchConfigs.Add(new(exeName, time));
+            SwitchConfigs.Add(new(exeName, title, time));
             Save();
         }
         public static bool Remove(string? exeName)

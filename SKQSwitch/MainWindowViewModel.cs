@@ -70,13 +70,14 @@ namespace SKQSwitch
             SwitchConfig config = SwitchConfig.SwitchConfigs[switchIndex++ % SwitchConfig.SwitchConfigs.Count];
             this.time = config.Time;
             this.ExeName = config.ExeName;
-            this.SwitchWindow(config.ExeName!);
+            this.SwitchWindow(config);
                 
         }
-        private void SwitchWindow(string processName)
+        private void SwitchWindow(SwitchConfig config)
         {
             try
             {
+                string processName = config.ExeName;
                 Process[] processes = Process.GetProcessesByName(processName);
                 if (processes.Length == 0)
                 {
@@ -88,18 +89,33 @@ namespace SKQSwitch
                     foreach (Process process in processes)
                     {
                         this.AddInfo($"名称：{processName},标题：{process.MainWindowTitle},句柄：{process.MainWindowHandle:X}，PID：{process.Id}");
-                        if (string.IsNullOrWhiteSpace(process.MainWindowTitle))
+                        HWND curHwnd = process.MainWindowHandle;
+                        if(curHwnd == HWND.NULL)
                         {
-                            this.AddInfo("进程标题为空，不处理");
-                            continue;
+                            this.AddInfo("未找到进程主窗口！");
+                            if(string.IsNullOrWhiteSpace(config.Title))
+                            {
+                                continue;
+                            }
+                            curHwnd = User32.FindWindow(null, config.Title);
+                            if (curHwnd == HWND.NULL)
+                            {
+                                this.AddInfo($"通过窗口标题未找到窗口：{config.Title}");
+                                continue;
+                            }
                         }
+                        //if (string.IsNullOrWhiteSpace(process.MainWindowTitle))
+                        //{
+                        //    this.AddInfo("进程标题为空，不处理");
+                        //    continue;
+                        //}
                         HWND hwnd = User32.GetForegroundWindow();
-                        if (hwnd == process.MainWindowHandle)
+                        if (hwnd == curHwnd)
                         {
                             this.AddInfo($"前台窗口已是当前窗口，不处理");
                             continue;
                         }
-                        if (!User32.IsWindow(process.MainWindowHandle))
+                        if (!User32.IsWindow(curHwnd))
                         {
                             this.AddInfo("非窗口句柄，不处理");
                             continue;
@@ -107,9 +123,9 @@ namespace SKQSwitch
                         bool flag = false;
                         flag = User32.AllowSetForegroundWindow(uint.MaxValue);
                         this.AddInfo($"AllowSetForegroundWindow:{flag}");
-                        flag = User32.SetForegroundWindow(process.MainWindowHandle);
+                        flag = User32.SetForegroundWindow(curHwnd);
                         this.AddInfo($"SetForegroundWindow:{flag}");
-                        User32.SwitchToThisWindow(process.MainWindowHandle, true);
+                        User32.SwitchToThisWindow(curHwnd, true);
                         //User32.SetActiveWindow(process.MainWindowHandle);
                         //User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
                         //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);

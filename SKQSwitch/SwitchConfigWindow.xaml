@@ -37,6 +37,13 @@
                     <TextBox mat:TextFieldAssist.HasClearButton="True" Text="{Binding ExeName}" Width="100"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <TextBlock Text="窗口标题："/>
+                        <TextBlock FontSize="8" Text="选填" Foreground="Red"/>
+                    </StackPanel>
+                    <TextBox mat:TextFieldAssist.HasClearButton="True" Text="{Binding Title}" Width="100"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <TextBlock Text="显示时长："/>
                     <TextBox Text="{Binding Time}" Width="100"/>
                 </StackPanel>
