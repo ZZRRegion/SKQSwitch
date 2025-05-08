@@ -41,8 +41,11 @@ namespace SKQSwitch
                     return;
                 }
             }
-            SwitchConfig.Add(ExeName, Time);
-            this.Update();
+            if (MessageBox.Show("确认添加？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                SwitchConfig.Add(ExeName, Time);
+                this.Update();
+            }
         }
         [RelayCommand]
         private void Remove()
@@ -52,8 +55,11 @@ namespace SKQSwitch
                 MessageBox.Show("请输入要删除的软件名称！");
                 return;
             }
-            SwitchConfig.Remove(ExeName);
-            this.Update();
+            if (MessageBox.Show("确认删除？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                SwitchConfig.Remove(ExeName);
+                this.Update();
+            }
         }
         public void UpdateConfig(SwitchConfig switchConfig)
         {
