@@ -27,10 +27,13 @@ namespace SKQSwitch
         private string[] processNames = { "UltraGalvo" , "VisionBlues2", "wps" };
         [ObservableProperty]
         private string info = string.Empty;
+        [ObservableProperty]
+        private string memo = "暂停";
         [RelayCommand]
         private void Pause()
         {
             this.isPause = !this.isPause;
+            this.Memo = isPause ? "启动" : "暂停";
         }
         public MainWindowViewModel()
         {
