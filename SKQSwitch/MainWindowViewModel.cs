@@ -34,6 +34,7 @@ namespace SKQSwitch
         }
         public MainWindowViewModel()
         {
+            this.AddInfo("软件启动");
             DispatcherTimer dispatcherTimer = new()
             {
                 Interval = TimeSpan.FromSeconds(3),
@@ -55,47 +56,56 @@ namespace SKQSwitch
         }
         private void SwitchWindow(string processName)
         {
-            Process[] processes = Process.GetProcessesByName(processName);
-            if(processes.Length == 0)
+            try
             {
-                this.AddInfo($"未找到进程:{processName}");
-            }
-            else
-            {
-                foreach (Process process in processes)
+                Process[] processes = Process.GetProcessesByName(processName);
+                if (processes.Length == 0)
                 {
-                    this.AddInfo($"名称：{processName},标题：{process.MainWindowTitle},句柄：{process.MainWindowHandle:X}，PID：{process.Id}");
-                    if(string.IsNullOrWhiteSpace(process.MainWindowTitle))
-                    {
-                        this.AddInfo("进程标题为空，不处理");
-                        continue;
-                    }
-                    HWND hwnd = User32.GetForegroundWindow();
-                    if(hwnd == process.MainWindowHandle)
-                    {
-                        this.AddInfo($"前台窗口已是当前窗口，不处理");
-                        continue;
-                    }
-                    if(!User32.IsWindow(process.MainWindowHandle))
-                    {
-                        this.AddInfo("非窗口句柄，不处理");
-                        continue;
-                    }
-                    User32.AllowSetForegroundWindow(uint.MaxValue);
-                    User32.SetForegroundWindow(process.MainWindowHandle);
-                    User32.SwitchToThisWindow(process.MainWindowHandle, true);
-                    User32.SetActiveWindow(process.MainWindowHandle);
-                    User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
-                    //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
-                    //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_NOTOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
-
+                    this.AddInfo($"未找到进程:{processName}");
                 }
+                else
+                {
+                    foreach (Process process in processes)
+                    {
+                        this.AddInfo($"名称：{processName},标题：{process.MainWindowTitle},句柄：{process.MainWindowHandle:X}，PID：{process.Id}");
+                        if (string.IsNullOrWhiteSpace(process.MainWindowTitle))
+                        {
+                            this.AddInfo("进程标题为空，不处理");
+                            continue;
+                        }
+                        HWND hwnd = User32.GetForegroundWindow();
+                        if (hwnd == process.MainWindowHandle)
+                        {
+                            this.AddInfo($"前台窗口已是当前窗口，不处理");
+                            continue;
+                        }
+                        if (!User32.IsWindow(process.MainWindowHandle))
+                        {
+                            this.AddInfo("非窗口句柄，不处理");
+                            continue;
+                        }
+                        User32.AllowSetForegroundWindow(uint.MaxValue);
+                        User32.SetForegroundWindow(process.MainWindowHandle);
+                        User32.SwitchToThisWindow(process.MainWindowHandle, true);
+                        User32.SetActiveWindow(process.MainWindowHandle);
+                        User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
+                        //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
+                        //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_NOTOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                this.AddInfo(ex.ToString());
             }
         }
         private void AddInfo(string msg)
         {
             StringBuilder sb = new();
-            sb.AppendLine($"{DateTime.Now}:{msg}");
+            string txt = $"{DateTime.Now}:{msg}{Environment.NewLine}";
+            Utils.LogUtil.AddInfo(txt);
+            sb.Append(txt);
             sb.Append(this.Info);
             if(sb.Length > 1000)
             {
