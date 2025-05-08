@@ -24,7 +24,7 @@ namespace SKQSwitch.Utils
             {
                 Directory.CreateDirectory(logsPath);
             }
-            LogFileName = Path.Combine(logsPath, DateTime.Now.ToString("yyyy-MM-dd HH-mm") + "_log.txt");
+            LogFileName = Path.Combine(logsPath, DateTime.Now.ToString("yyyy-MM-dd HH") + "_log.txt");
         }
     }
 }

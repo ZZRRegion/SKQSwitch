@@ -19,12 +19,14 @@
         <StackPanel Margin="0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Button Command="{Binding SwitchConfigWinCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" HorizontalAlignment="Left" Height="20" Padding="0" Margin="0" BorderThickness="0" 
                         Background="Transparent" Foreground="Gray" Width="20" Content="..."/>
-                <Button Grid.Column="1" Click="Button_Click" HorizontalAlignment="Right" Height="20" Width="20" BorderThickness="0" 
+                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding ExeName}"/>
+                <Button Grid.Column="2" Click="Button_Click" HorizontalAlignment="Right" Height="20" Width="20" BorderThickness="0" 
                 Background="Transparent" Foreground="IndianRed" Padding="0" Margin="0" Content="X"/>
             </Grid>
             <Button Background="#87CEEB" Margin="6 0" Command="{Binding PauseCommand}" Content="{Binding Memo}"/>

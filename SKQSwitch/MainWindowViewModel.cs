@@ -23,6 +23,8 @@ namespace SKQSwitch
         /// 切换软件的下标
         /// </summary>
         private int switchIndex = 0;
+        [ObservableProperty]
+        private string? exeName;
         private int time = 0;
         [ObservableProperty]
         private string info = string.Empty;
@@ -67,6 +69,7 @@ namespace SKQSwitch
             }
             SwitchConfig config = SwitchConfig.SwitchConfigs[switchIndex++ % SwitchConfig.SwitchConfigs.Count];
             this.time = config.Time;
+            this.ExeName = config.ExeName;
             this.SwitchWindow(config.ExeName!);
                 
         }
