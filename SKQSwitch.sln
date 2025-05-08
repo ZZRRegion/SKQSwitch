@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKQSwitch", "SKQSwitch\SKQSwitch.csproj", "{8E098FC8-BE76-4BEB-B7CB-0AD589E29ABE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E098FC8-BE76-4BEB-B7CB-0AD589E29ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E098FC8-BE76-4BEB-B7CB-0AD589E29ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E098FC8-BE76-4BEB-B7CB-0AD589E29ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E098FC8-BE76-4BEB-B7CB-0AD589E29ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10D23A49-8B53-4E6A-8848-394AC73F309F}
+	EndGlobalSection
+EndGlobal
