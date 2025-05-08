@@ -13,14 +13,18 @@ namespace SKQSwitch
 {
     internal partial class MainWindowViewModel : ObservableObject
     {
+        /// <summary>
+        /// 是否暂停切换
+        /// </summary>
         private bool isPause = false;
+        /// <summary>
+        /// 切换软件的下标
+        /// </summary>
         private int switchIndex = 0;
-        private const string titleIndex1 = "C:\\Users\\stdio\\source\\repos\\PECon\\Debug\\PEDll.dll - Notepad++";
-        private const string titleIndex2 = "TCP/UDP Socket 调试工具 V2.2";
-        //private const string titleIndex3 = "企业微信";
-        //private const string titleIndex4 = "Detect It Easy v3.10 [Windows 10 Version 2009] (x86_64)";
-
-        private string[] titles = { titleIndex1, titleIndex2 };
+        /// <summary>
+        /// 软件进程名称
+        /// </summary>
+        private string[] processNames = { "UltraGalvo" , "wps" };
         [ObservableProperty]
         private string info = string.Empty;
         [RelayCommand]
@@ -45,32 +49,48 @@ namespace SKQSwitch
                 this.AddInfo("当前是暂停状态");
                 return;
             }
-            string title = titles[switchIndex % titles.Length];
-            string classText = "TdxRibbon";
-            HWND hwnd = User32.FindWindow(null, title);
-            //HWND hwnd = User32.FindWindow(classText, null);
-            if(hwnd == HWND.NULL)
+            string processName = this.processNames[switchIndex++ % this.processNames.Length];
+            this.SwitchWindow(processName);
+                
+        }
+        private void SwitchWindow(string processName)
+        {
+            Process[] processes = Process.GetProcessesByName(processName);
+            if(processes.Length == 0)
             {
-                this.AddInfo($"未找到窗口句柄,{classText}");
-                //return;
+                this.AddInfo($"未找到进程:{processName}");
             }
-            hwnd = 0x21022;
-            bool flag = false;
-            User32.GetWindowThreadProcessId(hwnd, out uint pid);
-            //User32.AllowSetForegroundWindow(pid);
-            //flag = User32.SetForegroundWindow(hwnd);
-            //this.AddInfo($"SetForegroundWindow:{flag}");
-            User32.SwitchToThisWindow(hwnd, true);
-            //User32.SetForegroundWindow(hwnd);
-            User32.SetWindowPos(hwnd, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
-            HWND forHwnd = User32.GetForegroundWindow();
-            if(hwnd != forHwnd)
+            else
             {
-                this.AddInfo($"未激活，当前激活窗口：{forHwnd.DangerousGetHandle()}");
+                foreach (Process process in processes)
+                {
+                    this.AddInfo($"名称：{processName},标题：{process.MainWindowTitle},句柄：{process.MainWindowHandle:X}，PID：{process.Id}");
+                    if(string.IsNullOrWhiteSpace(process.MainWindowTitle))
+                    {
+                        this.AddInfo("进程标题为空，不处理");
+                        continue;
+                    }
+                    HWND hwnd = User32.GetForegroundWindow();
+                    if(hwnd == process.MainWindowHandle)
+                    {
+                        this.AddInfo($"前台窗口已是当前窗口，不处理");
+                        continue;
+                    }
+                    if(!User32.IsWindow(process.MainWindowHandle))
+                    {
+                        this.AddInfo("非窗口句柄，不处理");
+                        continue;
+                    }
+                    User32.AllowSetForegroundWindow(uint.MaxValue);
+                    User32.SetForegroundWindow(process.MainWindowHandle);
+                    User32.SwitchToThisWindow(process.MainWindowHandle, true);
+                    User32.SetActiveWindow(process.MainWindowHandle);
+                    User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
+                    //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
+                    //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_NOTOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
+
+                }
             }
-            //flag = User32.ShowWindow(hwnd, ShowWindowCommand.SW_SHOWNORMAL);
-            //this.AddInfo($"ShowWindow:{flag}");
-            switchIndex++;
         }
         private void AddInfo(string msg)
         {
