@@ -104,11 +104,6 @@ namespace SKQSwitch
                                 continue;
                             }
                         }
-                        //if (string.IsNullOrWhiteSpace(process.MainWindowTitle))
-                        //{
-                        //    this.AddInfo("进程标题为空，不处理");
-                        //    continue;
-                        //}
                         HWND hwnd = User32.GetForegroundWindow();
                         if (hwnd == curHwnd)
                         {
@@ -123,6 +118,7 @@ namespace SKQSwitch
                         bool flag = false;
                         flag = User32.AllowSetForegroundWindow(uint.MaxValue);
                         this.AddInfo($"AllowSetForegroundWindow:{flag}");
+                        //User32.ShowWindow(curHwnd, ShowWindowCommand.SW_RESTORE);
                         flag = User32.SetForegroundWindow(curHwnd);
                         this.AddInfo($"SetForegroundWindow:{flag}");
                         User32.SwitchToThisWindow(curHwnd, true);
