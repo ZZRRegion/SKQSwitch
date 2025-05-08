@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SKQSwitch.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,10 +23,7 @@ namespace SKQSwitch
         /// 切换软件的下标
         /// </summary>
         private int switchIndex = 0;
-        /// <summary>
-        /// 软件进程名称
-        /// </summary>
-        private string[] processNames = { "UltraGalvo" , "VisionBlues2", "wps" };
+        private int time = 0;
         [ObservableProperty]
         private string info = string.Empty;
         [ObservableProperty]
@@ -37,7 +35,7 @@ namespace SKQSwitch
             this.Memo = isPause ? "启动" : "暂停";
         }
         [RelayCommand]
-        private void SwitchConfig()
+        private void SwitchConfigWin()
         {
             SwitchConfigWindow switchConfigWindow = new();
             switchConfigWindow.ShowDialog();
@@ -46,7 +44,7 @@ namespace SKQSwitch
         {
             DispatcherTimer dispatcherTimer = new()
             {
-                Interval = TimeSpan.FromSeconds(3),
+                Interval = TimeSpan.FromSeconds(1),
             };
             dispatcherTimer.Tick += DispatcherTimer_Tick; ;
             dispatcherTimer.Start();
@@ -59,8 +57,16 @@ namespace SKQSwitch
                 this.AddInfo("当前是暂停状态");
                 return;
             }
-            string processName = this.processNames[switchIndex++ % this.processNames.Length];
-            this.SwitchWindow(processName);
+            if (SwitchConfig.SwitchConfigs.Count == 0)
+                return;
+            if(this.time > 0)//让计数归零
+            {
+                this.time--;
+                return;
+            }
+            SwitchConfig config = SwitchConfig.SwitchConfigs[switchIndex++ % SwitchConfig.SwitchConfigs.Count];
+            this.time = config.Time;
+            this.SwitchWindow(config.ExeName!);
                 
         }
         private void SwitchWindow(string processName)

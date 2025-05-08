@@ -19,7 +19,7 @@ namespace SKQSwitch
         [ObservableProperty]
         private string? exeName;
         [ObservableProperty]
-        private int time;
+        private int time = 3;
         [RelayCommand]
         private void Add()
         {
@@ -27,6 +27,19 @@ namespace SKQSwitch
             {
                 MessageBox.Show("请输入要添加的软件名称！");
                 return;
+            }
+            if(this.Time <= 0)
+            {
+                MessageBox.Show("请输入显示时间！");
+                return;
+            }
+            foreach(SwitchConfig config in SwitchConfig.SwitchConfigs)
+            {
+                if(config.ExeName == ExeName)
+                {
+                    MessageBox.Show($"当前已配置该软件:{ExeName}");
+                    return;
+                }
             }
             SwitchConfig.Add(ExeName, Time);
             this.Update();
@@ -41,11 +54,6 @@ namespace SKQSwitch
             }
             SwitchConfig.Remove(ExeName);
             this.Update();
-        }
-        [RelayCommand]
-        private void OnItemDoubleClick()
-        {
-
         }
         public void UpdateConfig(SwitchConfig switchConfig)
         {

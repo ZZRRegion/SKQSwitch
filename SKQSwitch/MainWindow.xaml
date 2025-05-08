@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SKQSwitch"
         mc:Ignorable="d" Loaded="Window_Loaded" 
         AllowsTransparency="True" WindowStyle="None" BorderThickness="0"
-        Background="Transparent" ResizeMode="NoResize"
+        Background="Transparent" ResizeMode="NoResize" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen" Topmost="True" Closing="Window_Closing"
         Title="激光研究所-软件切换" Height="70" Width="120">
     <Window.DataContext>
