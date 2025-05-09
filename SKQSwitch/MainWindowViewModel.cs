@@ -69,7 +69,8 @@ namespace SKQSwitch
             }
             SwitchConfig config = SwitchConfig.SwitchConfigs[switchIndex++ % SwitchConfig.SwitchConfigs.Count];
             this.time = config.Time;
-            this.ExeName = config.ExeName;
+
+            this.ExeName = string.IsNullOrWhiteSpace(config.DisplayText) ? config.ExeName : config.DisplayText;
             this.SwitchWindow(config);
                 
         }

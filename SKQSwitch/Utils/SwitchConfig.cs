@@ -26,20 +26,25 @@ namespace SKQSwitch.Utils
         /// 展示时间
         /// </summary>
         public int Time { get; set; }
-        public SwitchConfig(string exeName, string title, int time)
+        /// <summary>
+        /// 显示别名
+        /// </summary>
+        public string DisplayText { get; set; }
+        public SwitchConfig(string exeName, string title, int time, string displayText)
         {
             this.ExeName = exeName;
             this.Title = title;
             this.Time = time;
+            this.DisplayText = displayText;
         }
         static SwitchConfig()
         {
             SwitchConfigs = Load();
         }
-        public static void Add(string exeName, string title, int time)
+        public static void Add(string exeName, string title, int time, string displayText)
         {
-            LogUtil.AddInfoInsertDateTime($"添加：{exeName},{title},{time}");
-            SwitchConfigs.Add(new(exeName, title, time));
+            LogUtil.AddInfoInsertDateTime($"添加：{exeName},{title},{time},{displayText}");
+            SwitchConfigs.Add(new(exeName, title, time, displayText));
             Save();
         }
         public static bool Remove(string? exeName)

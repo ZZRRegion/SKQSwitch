@@ -24,6 +24,8 @@ namespace SKQSwitch
         private string title = string.Empty;
         [ObservableProperty]
         private int time = 3;
+        [ObservableProperty]
+        private string displayText = string.Empty;
         [RelayCommand]
         private void Add()
         {
@@ -80,7 +82,7 @@ namespace SKQSwitch
             LogUtil.AddInfoInsertDateTime(info);
             if (MessageBox.Show(info, "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                SwitchConfig.Add(ExeName, Title, Time);
+                SwitchConfig.Add(ExeName, Title, Time, DisplayText);
                 this.Update();
             }
         }
@@ -103,6 +105,7 @@ namespace SKQSwitch
             this.ExeName = switchConfig.ExeName;
             this.Title = switchConfig.Title;
             this.Time = switchConfig.Time;
+            this.DisplayText = switchConfig.DisplayText;
         }
         public SwitchConfigWindowViewModel()
         {
