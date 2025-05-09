@@ -38,6 +38,7 @@ namespace SKQSwitch.Utils
         }
         public static void Add(string exeName, string title, int time)
         {
+            LogUtil.AddInfoInsertDateTime($"添加：{exeName},{title},{time}");
             SwitchConfigs.Add(new(exeName, title, time));
             Save();
         }
@@ -47,6 +48,7 @@ namespace SKQSwitch.Utils
             {
                 if(config.ExeName == exeName)
                 {
+                    LogUtil.AddInfoInsertDateTime($"删除：{exeName}");
                     SwitchConfigs.Remove(config);
                     Save();
                     return true;

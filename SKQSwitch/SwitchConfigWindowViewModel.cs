@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Vanara.PInvoke;
 
 namespace SKQSwitch
 {
@@ -43,7 +45,40 @@ namespace SKQSwitch
                     return;
                 }
             }
-            if (MessageBox.Show("确认添加？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            string info = string.Empty;
+            Process[] processes = Process.GetProcessesByName(ExeName);
+            if(processes.Length > 0)
+            {
+                foreach(Process process in processes)
+                {
+                    if (process.MainWindowHandle != IntPtr.Zero)
+                    {
+                        info += $"进程ID：{process.Id}，句柄：{process.MainWindowHandle:X};";
+                    }
+                }
+            }
+            if(string.IsNullOrWhiteSpace(info) && !string.IsNullOrWhiteSpace(Title))
+            {
+                HWND hwnd = User32.FindWindow(null, Title);
+                if(hwnd != HWND.NULL)
+                {
+                    if(User32.GetWindowThreadProcessId(hwnd, out uint pid) > 0)
+                    {
+                        info += $"进程ID：{pid},窗口句柄：{hwnd.DangerousGetHandle():X};";
+                    }
+
+                }
+            }
+            if(string.IsNullOrWhiteSpace(info))
+            {
+                info = "当前未找到该进程，是否继续添加?";
+            }
+            else
+            {
+                info = $"当前信息：{info}，确认添加？";
+            }
+            LogUtil.AddInfoInsertDateTime(info);
+            if (MessageBox.Show(info, "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 SwitchConfig.Add(ExeName, Title, Time);
                 this.Update();
