@@ -24,7 +24,7 @@ namespace SKQSwitch
         /// </summary>
         private int switchIndex = 0;
         [ObservableProperty]
-        private string? exeName;
+        private string exeName = string.Empty;
         private int time = 0;
         [ObservableProperty]
         private string info = string.Empty;
@@ -71,6 +71,7 @@ namespace SKQSwitch
             this.time = config.Time;
 
             this.ExeName = string.IsNullOrWhiteSpace(config.DisplayText) ? config.ExeName : config.DisplayText;
+            this.ExeName = $"{ExeName}?";//带?表示执行切换失败
             this.SwitchWindow(config);
                 
         }
@@ -123,6 +124,7 @@ namespace SKQSwitch
                         flag = User32.SetForegroundWindow(curHwnd);
                         this.AddInfo($"SetForegroundWindow:{flag}");
                         User32.SwitchToThisWindow(curHwnd, true);
+                        this.ExeName = this.ExeName.Replace("?", string.Empty);//移除"?"
                         //User32.SetActiveWindow(process.MainWindowHandle);
                         //User32.ShowWindow(process.MainWindowHandle, ShowWindowCommand.SW_MAXIMIZE);
                         //User32.SetWindowPos(process.MainWindowHandle, HWND.HWND_TOPMOST, 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
