@@ -27,7 +27,7 @@ namespace SKQSwitch.Utils
         }
         public void Start()
         {
-            this._hookId = this.SetHook(this._hookProc);
+            this._hookId = this.SetHook();
             if(this._hookId == HHOOK.NULL)
             {
                 Debug.WriteLine("设置HOOk失败");
@@ -39,14 +39,18 @@ namespace SKQSwitch.Utils
         }
         public void Stop()
         {
-            User32.UnhookWindowsHookEx(this._hookId);
+            if (this._hookId != HHOOK.NULL)
+            {
+                User32.UnhookWindowsHookEx(this._hookId);
+                this._hookId = HHOOK.NULL;
+            }
         }
-        private User32.SafeHHOOK SetHook(HookProc proc)
+        private User32.SafeHHOOK SetHook()
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule!)
             {
-                return User32.SetWindowsHookEx(User32.HookType.WH_KEYBOARD_LL, proc, Kernel32.GetModuleHandle(curModule.ModuleName), 0);
+                return User32.SetWindowsHookEx(User32.HookType.WH_KEYBOARD_LL, this._hookProc, Kernel32.GetModuleHandle(curModule.ModuleName), 0);
             }
         }
         /// <summary>
