@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using SKQSwitch.Utils;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,15 +20,25 @@ namespace SKQSwitch
     /// </summary>
     public partial class MainWindow : Window
     {
+        private GlobalKeyboardHook _keyboardHook;
         public MainWindow()
         {
             InitializeComponent();
+            _keyboardHook = new GlobalKeyboardHook();
+            _keyboardHook.OnKeyPressed += _keyboardHook_OnKeyPressed;
+        }
+
+        private void _keyboardHook_OnKeyPressed(object? sender, GlobalKeyboardHook.KeyPressedEventArgs e)
+        {
+            this.viewModel.KeyName = e.Key.ToString();
+            Debug.WriteLine($"key:{e.Key}");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Utils.LogUtil.AddInfoInsertDateTime("软件启动");
             this.ShowPosition();
+            _keyboardHook.Start();
         }
         private void ShowPosition()
         {
@@ -37,9 +48,10 @@ namespace SKQSwitch
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _keyboardHook.Stop();
             Utils.LogUtil.AddInfoInsertDateTime("软件退出");
         }
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
         {
             if(e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
@@ -50,7 +62,7 @@ namespace SKQSwitch
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("确定退出？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (System.Windows.MessageBox.Show("确定退出？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 this.Close();
             }

@@ -8,7 +8,7 @@
         AllowsTransparency="True" WindowStyle="None" BorderThickness="0"
         Background="Transparent" ResizeMode="NoResize" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen" Topmost="True" Closing="Window_Closing"
-        Title="激光研究所-软件切换" Height="70" Width="120">
+        Title="激光研究所-软件切换" Height="80" Width="120">
     <Window.DataContext>
         <local:MainWindowViewModel x:Name="viewModel"/>
     </Window.DataContext>
@@ -30,6 +30,7 @@
                 Background="Transparent" Foreground="IndianRed" Padding="0" Margin="0" Content="X"/>
             </Grid>
             <Button Background="#87CEEB" Margin="6 0" Command="{Binding PauseCommand}" Content="{Binding Memo}"/>
+            <TextBlock HorizontalAlignment="Center" d:Text="H" Text="{Binding KeyName}"/>
         </StackPanel>
     </Border>
 </Window>

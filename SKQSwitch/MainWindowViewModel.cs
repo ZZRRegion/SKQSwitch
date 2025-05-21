@@ -13,7 +13,7 @@ using Vanara.PInvoke;
 
 namespace SKQSwitch
 {
-    internal partial class MainWindowViewModel : ObservableObject
+    internal partial class MainWindowViewModel : ViewModelBase
     {
         /// <summary>
         /// 是否暂停切换
@@ -25,6 +25,8 @@ namespace SKQSwitch
         private int switchIndex = 0;
         [ObservableProperty]
         private string exeName = string.Empty;
+        [ObservableProperty]
+        private string keyName = string.Empty;
         private int time = 0;
         [ObservableProperty]
         private string info = string.Empty;
@@ -45,6 +47,8 @@ namespace SKQSwitch
         }
         public MainWindowViewModel()
         {
+            if (this.IsInDesignMode)
+                return;
             DispatcherTimer dispatcherTimer = new()
             {
                 Interval = TimeSpan.FromSeconds(1),
