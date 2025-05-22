@@ -21,6 +21,7 @@ namespace SKQSwitch
     public partial class MainWindow : Window
     {
         private GlobalKeyboardHook _keyboardHook;
+        private Queue<Key> keys = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -30,8 +31,18 @@ namespace SKQSwitch
 
         private void _keyboardHook_OnKeyPressed(object? sender, GlobalKeyboardHook.KeyPressedEventArgs e)
         {
-            this.viewModel.KeyName = e.Key.ToString();
-            Debug.WriteLine($"key:{e.Key}");
+            this.keys.Enqueue(e.Key);
+            if(this.keys.Count > 5)
+            {
+                this.keys.Dequeue();
+            }
+            StringBuilder sb = new();
+            foreach(var key in this.keys)
+            {
+                sb.Append(key.ToString());
+            }
+            this.viewModel.KeyName = sb.ToString();
+            Debug.WriteLine($"key:{sb}");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

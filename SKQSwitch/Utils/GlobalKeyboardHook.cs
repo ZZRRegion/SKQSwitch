@@ -6,7 +6,6 @@ using System.Printing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Vanara.PInvoke;
 using static Vanara.PInvoke.User32;
 
@@ -14,6 +13,12 @@ namespace SKQSwitch.Utils
 {
     public class GlobalKeyboardHook : IDisposable
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern bool UnhookWindowsHookEx(int idHook);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern int CallNextHookEx(int idHook, int nCode, Int32 wParam, IntPtr lParam);
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0101;
         private const int WM_SYSKEYDOWN = 0x0104;
@@ -23,7 +28,7 @@ namespace SKQSwitch.Utils
         public event EventHandler<KeyPressedEventArgs>? OnKeyPressed;
         public GlobalKeyboardHook()
         {
-            this._hookProc = HookCallback;
+            this._hookProc = new(HookCallback);
         }
         public void Start()
         {
@@ -41,16 +46,18 @@ namespace SKQSwitch.Utils
         {
             if (this._hookId != HHOOK.NULL)
             {
-                User32.UnhookWindowsHookEx(this._hookId);
+                UnhookWindowsHookEx((int)this._hookId.DangerousGetHandle());
+                //User32.UnhookWindowsHookEx(this._hookId);
                 this._hookId = HHOOK.NULL;
             }
         }
-        private User32.SafeHHOOK SetHook()
+        private int SetHook()
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule!)
             {
-                return User32.SetWindowsHookEx(User32.HookType.WH_KEYBOARD_LL, this._hookProc, Kernel32.GetModuleHandle(curModule.ModuleName), 0);
+                Kernel32.SafeHINSTANCE hinstance = Kernel32.GetModuleHandle(curModule.ModuleName);
+                return SetWindowsHookEx((int)User32.HookType.WH_KEYBOARD_LL, this._hookProc, hinstance.DangerousGetHandle(), 0); //User32.SetWindowsHookEx(User32.HookType.WH_KEYBOARD_LL, _hookProc, hinstance, 0);
             }
         }
         /// <summary>
@@ -60,7 +67,7 @@ namespace SKQSwitch.Utils
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        private nint HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if(nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
             {
@@ -68,12 +75,12 @@ namespace SKQSwitch.Utils
                 {
                     KBDLLHOOKSTRUCT hookStruct = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
 
-                    System.Windows.Input.Key key = KeyInterop.KeyFromVirtualKey((int)hookStruct.vkCode);
+                    System.Windows.Input.Key key = System.Windows.Input.KeyInterop.KeyFromVirtualKey((int)hookStruct.vkCode);
 
                     //检查是否按下Ctrl、Alt或Shift
-                    bool ctrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; //(Control.ModifierKeys & Keys.Control) != 0;
-                    bool alt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;// (Control.ModifierKeys & Keys.Alt) != 0;
-                    bool shift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;// (Control.ModifierKeys & Keys.Shift) != 0;
+                    bool ctrl = (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control; //(Control.ModifierKeys & Keys.Control) != 0;
+                    bool alt = (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Alt) == System.Windows.Input.ModifierKeys.Alt;// (Control.ModifierKeys & Keys.Alt) != 0;
+                    bool shift = (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Shift) == System.Windows.Input.ModifierKeys.Shift;// (Control.ModifierKeys & Keys.Shift) != 0;
                     Debug.WriteLine($"key:{key},ctrl:{ctrl},alt:{alt},shift:{shift}");
                     OnKeyPressed?.Invoke(this, new(key, ctrl, alt, shift));
                 }
